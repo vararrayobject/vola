@@ -6,5 +6,5 @@ Follow the steps to run the project
 5. Create a table in mysql and fill the DB_DATABASE= variable accordingly
 6. Run command - "php artisan migrate --seed" to create tables and insert data into table
 7. Run command - "php artisan serve" to run the project
-8. To generate report run {Base_url}/api/generate-report
-9. To generate report run {Base_url}/api/download-report?filename=1664022751_report.csv
+8. To generate report run {Base_url}/api/generate-report - you will receive filename with path in response
+9. To download report run {Base_url}/api/download-report?filename={FILENAME_FROM_PREVIOUS_STEP_RESPONSE}.csv
