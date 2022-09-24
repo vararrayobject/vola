@@ -20,18 +20,10 @@ class ApiController extends Controller
     public function generateReport()
     {
         $users = UserProfile::with(['user'])
+        ->select(['city', 'userId'])
         ->orderBy('city')
         ->get()
         ->groupBy(['city', 'user.isActive']);
-
-        $finalArray = [];
-        foreach ($users as $key => $value) {
-            array_push($finalArray, [
-                'city' => $key,
-                'activeUsers' => $value[1]->count(),
-                'inActiveUsers' => $value[0]->count(),
-            ]);
-        }
 
         if (!Storage::disk('local')->exists(Self::DIRECTORY)) {
             Storage::makeDirectory(Self::DIRECTORY);
@@ -46,13 +38,20 @@ class ApiController extends Controller
             "inactiveCount",
         ]);
 
-        foreach ($finalArray as $city) {
+        // $finalArray = [];
+        foreach ($users as $key => $value) {
+            // array_push($finalArray, [
+            //     'city' => $key,
+            //     'activeUsers' => $value[1]->count(),
+            //     'inActiveUsers' => $value[0]->count(),
+            // ]);
             fputcsv($handle, [
-                $city['city'],
-                $city['activeUsers'],
-                $city['inActiveUsers'],
+                $key,
+                $value[1]->count(),
+                $value[0]->count(),
             ]);
         }
+
         fclose($handle);
         return $this->successResponse(200, $filename);
     }
